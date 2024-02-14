@@ -1,14 +1,25 @@
 const express = require('express');
-const sharp = require('sharp');
+const { createCanvas, loadImage } = require('canvas');
 const moment = require('moment');
-const path = require('path');
 const fetch = require('node-fetch');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Function to generate SVG content for the countdown image
-function generateCountdownSVG() {
+async function generateCountdownImage(callback) {
+    const imageUrl = 'https://i.imgur.com/30AZsvg.png'; // URL of the background image
+
+    // Load the external image
+    const background = await loadImage(imageUrl);
+
+    // Setup canvas dimensions to match the background image
+    const canvas = createCanvas(background.width, background.height);
+    const ctx = canvas.getContext('2d');
+
+    // Draw the background image first
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    // Determine the next stream date
     const now = moment();
     let nextStreamDate;
     if (now.isoWeekday() <= 3) {
@@ -17,51 +28,39 @@ function generateCountdownSVG() {
         nextStreamDate = moment.utc('2024-02-15T15:00:00-05:00');
     } else if (now.isoWeekday() === 5) {
         nextStreamDate = moment.utc('2024-02-16T15:00:00-05:00');
-    }
+    }    // Logic to determine nextStreamDate as previously
 
     const diff = moment.duration(nextStreamDate.diff(now));
     const countdownText = `${diff.hours()}h:${diff.minutes()}m:${diff.seconds()}s`;
     const nextStreamText = "Next Stream";
 
-    const imageWidth = 3000;
-    const imageHeight = 1570;
+    // Text styling
+    ctx.fillStyle = 'blue'; // Text color
+    ctx.font = 'bold 25px Arial'; // Font size and family
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
-    return `
-    <svg width="${imageWidth}" height="${imageHeight}" xmlns="http://www.w3.org/2000/svg">
-        <text x="50%" y="77%" dominant-baseline="middle" text-anchor="middle" font-size="147" fill="blue">${nextStreamText}</text>
-        <text x="50%" y="90%" dominant-baseline="middle" text-anchor="middle" font-size="200" fill="blue">${countdownText}</text>
-    </svg>`;
+    // Draw the texts over the image
+    ctx.fillText(nextStreamText, canvas.width / 2, canvas.height * 0.77);
+    ctx.font = 'bold 32px Arial'; // Font size and family
+    ctx.fillText(countdownText, canvas.width / 2, canvas.height * 0.9);
+
+    // Convert the canvas to a Buffer
+    const buffer = canvas.toBuffer('image/png');
+    callback(buffer);
 }
 
 app.get('/countdown-image', async (req, res) => {
-    const imageUrl = "https://i.imgur.com/TqzPCP4.jpg";
-
     try {
-        // Fetch the original image
-        const response = await fetch(imageUrl);
-        if (!response.ok) throw new Error(`Failed to fetch the original image: ${response.statusText}`);
-        const originalImageBuffer = await response.buffer();
-            
-        // Get the SVG content and convert it to PNG buffer
-        const svgContent = generateCountdownSVG();
-        const overlayBuffer = await sharp(Buffer.from(svgContent))
-            .toFormat('png')
-            .toBuffer();
-            
-        // Composite the overlay onto the fetched original image
-        const imageWithText = await sharp(originalImageBuffer)
-            .composite([{ input: overlayBuffer, blend: 'over' }])
-            .png() // Ensure the output is PNG format
-            .toBuffer();
-            
-        res.setHeader('Content-Type', 'image/png');
-        res.send(imageWithText);
+        await generateCountdownImage(buffer => {
+            res.setHeader('Content-Type', 'image/png');
+            res.send(buffer);
+        });
     } catch (error) {
         console.error('Error generating countdown image:', error);
         res.status(500).send('Error generating image');
     }
 });
-
 app.get('/', (req, res) => {
     const imageUrl = `${req.protocol}://${req.get('host')}/countdown-image`;
     res.send(`
