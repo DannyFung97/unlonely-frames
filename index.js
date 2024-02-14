@@ -64,7 +64,7 @@ app.get('/countdown-image', async (req, res) => {
         res.send(imageWithText);
     } catch (error) {
         console.error('Error generating countdown image:', error);
-        res.status(500).send('Error generating image');
+        res.status(500).send('Error generating image', error);
     }
 });
 
