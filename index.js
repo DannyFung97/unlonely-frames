@@ -2,11 +2,10 @@ const express = require('express');
 const sharp = require('sharp');
 const moment = require('moment');
 const path = require('path');
+const fetch = require('node-fetch');
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-app.use(express.static('public'));
 
 // Function to generate SVG content for the countdown image
 function generateCountdownSVG() {
@@ -43,28 +42,31 @@ function generateCountdownSVG() {
 }
 
 app.get('/countdown-image', async (req, res) => {
+    const imageUrl = "https://i.imgur.com/TqzPCP4.jpg";
+
     try {
-        // Get the SVG content
+        // Fetch the original image
+        const response = await fetch(imageUrl);
+        if (!response.ok) throw new Error(`Failed to fetch the original image: ${response.statusText}`);
+        const originalImageBuffer = await response.buffer();
+            
+        // Get the SVG content and convert it to PNG buffer
         const svgContent = generateCountdownSVG();
-        
-        // Path to the original image
-        const originalImagePath = path.join(__dirname, 'public', 'original.png');
-        
-        // Convert the SVG content to a PNG buffer
         const overlayBuffer = await sharp(Buffer.from(svgContent))
             .toFormat('png')
             .toBuffer();
-        
-        // Composite the overlay onto the original image
-        const imageWithText = await sharp(originalImagePath)
-            .composite([{ input: overlayBuffer, gravity: 'southeast' }]) // Adjust gravity as needed
+            
+        // Composite the overlay onto the fetched original image
+        const imageWithText = await sharp(originalImageBuffer)
+            .composite([{ input: overlayBuffer, blend: 'over' }])
+            .png() // Ensure the output is PNG format
             .toBuffer();
-        
+            
         res.setHeader('Content-Type', 'image/png');
         res.send(imageWithText);
     } catch (error) {
         console.error('Error generating countdown image:', error);
-        res.status(500).send('Error generating image', error);
+        res.status(500).send('Error generating image');
     }
 });
 
