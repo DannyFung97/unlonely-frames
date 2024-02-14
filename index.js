@@ -10,10 +10,10 @@ app.get('/', (req, res) => {
     <html>
     <head>
     <title>My first express app</title>
-    <meta property="og:image" content="https://i.imgur.com/tz59v0I.png">
+    <meta property="og:image" content="https://i.imgur.com/RxWbkLY.png">
 
     <meta property="fc:frame" content="vNext">
-    <meta property="fc:frame:image" content="https://i.imgur.com/tz59v0I.png">
+    <meta property="fc:frame:image" content="https://i.imgur.com/RxWbkLY.png">
 
     <meta property="fc:frame:button:1" content="Watch now">
     <meta property="fc:frame:button:1:action" content="link">
