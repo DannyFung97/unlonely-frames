@@ -6,6 +6,8 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(express.static('public'));
+
 // Function to generate SVG content for the countdown image
 function generateCountdownSVG() {
     const now = moment();
