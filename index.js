@@ -28,14 +28,6 @@ function generateCountdownSVG() {
 
     return `
     <svg width="${imageWidth}" height="${imageHeight}" xmlns="http://www.w3.org/2000/svg">
-        <style>
-            @font-face {
-                font-family: 'Comic Sans MS';
-            }
-            text { 
-                font-family: 'Comic Sans MS', sans-serif;
-            }
-        </style>
         <text x="50%" y="77%" dominant-baseline="middle" text-anchor="middle" font-size="147" fill="blue">${nextStreamText}</text>
         <text x="50%" y="90%" dominant-baseline="middle" text-anchor="middle" font-size="200" fill="blue">${countdownText}</text>
     </svg>`;
