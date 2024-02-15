@@ -8,6 +8,27 @@ const port = process.env.PORT || 3000;
 
 //oh my god, thank you for your help: https://github.com/Automattic/node-canvas/issues/2248
 
+/**
+
+First You need to set the Environment variable for your current Build
+i) Go to setting --> on left in side menu click on Environment Variables
+ii) in key field enter the value LD_LIBRARY_PATH and in value field enter the following line
+
+/vercel/path0/node_modules/canvas/build/Release:/var/task/node_modules/canvas/build/Release
+
+iii) Press Save button (you may want to set this environment variable for production, development environment or you can check all values) by default all values will be selected you can go with them
+
+If the above steps are completed now you need to downgrade your node version to "16" in Vercel app by default at the time of writing this comment is 18 version you need to downgrade this to 16 simply by following the below steps
+
+i) Click on setting and go to general tab from left side menu
+ii) Scroll down a bit and you will see Node.js version box you can see the current version if its already 16 redeploy the server or set the version to 16 after redeploying the server your problem will be resolved.
+
+Note: my current version of canvas library is "canvas": "^2.11.0" in my package.json
+
+Enjoy I hope it helps
+
+*/
+
 async function generateCountdownImage() {
   const imageUrl = 'https://i.imgur.com/30AZsvg.png'; // URL of the background image
 
