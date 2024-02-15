@@ -1,6 +1,6 @@
 const express = require('express');
 const { createCanvas, loadImage } = require('canvas');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -41,16 +41,18 @@ async function generateCountdownImage() {
 
   // Draw the background image
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+  const timeZone = 'America/New_York';
 
   // Determine the next stream date
-  const now = moment();
+  let now = moment().tz(timeZone);
   let nextStreamDate;
-  if (now.isoWeekday() <= 3) { // If today is Wednesday or before
-    nextStreamDate = moment.utc('2024-02-14T20:00:00-05:00');
+  // Assuming you want to set the next stream date in EST
+  if (now.isoWeekday() <= 3) { // Today is Wednesday or before
+    nextStreamDate = moment.tz('2024-02-14 20:00:00', timeZone);
   } else if (now.isoWeekday() === 4) { // Thursday
-    nextStreamDate = moment.utc('2024-02-15T15:00:00-05:00');
+    nextStreamDate = moment.tz('2024-02-15 15:00:00', timeZone);
   } else if (now.isoWeekday() === 5) { // Friday
-    nextStreamDate = moment.utc('2024-02-16T15:00:00-05:00');
+    nextStreamDate = moment.tz('2024-02-16 15:00:00', timeZone);
   }
 
   const diff = moment.duration(nextStreamDate.diff(now));
