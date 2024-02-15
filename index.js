@@ -98,7 +98,7 @@ app.get('/', (req, res) => {
     <meta property="fc:frame:image" content="${imageUrl}" />
 
     <meta property="fc:frame:button:1" content="refresh timer" />
-    <meta property="fc:frame:button:1:action" content="post_redirect" />
+    <meta property="fc:frame:button:1:action" content="post" />
     <meta property="fc:frame:button:1:target" content="${imageUrl}" />
 
     <meta property="fc:frame:button:2" content="watch now" />
