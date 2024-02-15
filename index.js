@@ -89,7 +89,7 @@ app.get('/', (req, res) => {
     <html>
     <head>
     <meta property="fc:frame" content="vNext">
-    <meta property="fc:frame:image" content="${imageUrl}">
+    <meta property="fc:frame:image" content="https://i.imgur.com/30AZsvg.png">
 
     <meta property="fc:frame:button:2" content="watch now">
     <meta property="fc:frame:button:2:action" content="link">
