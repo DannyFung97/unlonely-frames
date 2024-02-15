@@ -1,5 +1,5 @@
 const express = require('express');
-const Jimp = require('jimp');
+const { createCanvas, loadImage } = require('canvas');
 const moment = require('moment');
 
 const app = express();
@@ -9,7 +9,14 @@ async function generateCountdownImage() {
   const imageUrl = 'https://i.imgur.com/30AZsvg.png'; // URL of the background image
 
   // Load the external image
-  const background = await Jimp.read(imageUrl);
+  const background = await loadImage(imageUrl);
+
+  // Create a canvas with the same dimensions as the background image
+  const canvas = createCanvas(background.width, background.height);
+  const ctx = canvas.getContext('2d');
+
+  // Draw the background image
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
   // Determine the next stream date
   const now = moment();
@@ -23,18 +30,19 @@ async function generateCountdownImage() {
   }
 
   const diff = moment.duration(nextStreamDate.diff(now));
-  const countdownText = `next stream in ${diff.hours()}h:${diff.minutes()}m:${diff.seconds()}s`;
+  const countdownText = `Next stream in ${diff.hours()}h:${diff.minutes()}m:${diff.seconds()}s`;
 
-  // Calculate the position for the text
-  const width = background.bitmap.width;
-  const height = background.bitmap.height;
+  // Set text properties
+  ctx.fillStyle = 'blue'; // Text color
+  ctx.font = '32px Arial'; // Font size and family
+  ctx.textAlign = 'center'; // Center the text horizontally
+  ctx.textBaseline = 'middle'; // Center the text vertically
 
-  const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+  // Draw the text onto the canvas
+  ctx.fillText(countdownText, canvas.width / 2, canvas.height / 2);
 
-  background.print(font, width / 2 - 190, height / 2 + 50, countdownText);
-
-  // Convert the image to a Buffer
-  const buffer = await background.getBufferAsync(Jimp.MIME_PNG);
+  // Convert the canvas to a Buffer
+  const buffer = canvas.toBuffer('image/png');
 
   return buffer;
 }
