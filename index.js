@@ -97,9 +97,13 @@ app.get('/', (req, res) => {
     <meta property="fc:frame" content="vNext" />
     <meta property="fc:frame:image" content="${imageUrl}" />
 
-    <meta property="fc:frame:button:1" content="watch now" />
-    <meta property="fc:frame:button:1:action" content="link" />
-    <meta property="fc:frame:button:1:target" content="https://www.unlonely.app/channels/loveonleverage" />
+    <meta property="fc:frame:button:1" content="refresh timer" />
+    <meta property="fc:frame:button:1:action" content="post_redirect" />
+    <meta property="fc:frame:button:1:target" content="${imageUrl}" />
+
+    <meta property="fc:frame:button:2" content="watch now" />
+    <meta property="fc:frame:button:2:action" content="link" />
+    <meta property="fc:frame:button:2:target" content="https://www.unlonely.app/channels/loveonleverage" />
     </head>
     <body>
     <h1>Welcome to my first express app</h1>
