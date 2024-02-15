@@ -5,6 +5,9 @@ const moment = require('moment');
 const app = express();
 const port = process.env.PORT || 3000;
 
+
+//oh my god, thank you for your help: https://github.com/Automattic/node-canvas/issues/2248
+
 async function generateCountdownImage() {
   const imageUrl = 'https://i.imgur.com/30AZsvg.png'; // URL of the background image
 
@@ -34,12 +37,12 @@ async function generateCountdownImage() {
 
   // Set text properties
   ctx.fillStyle = 'blue'; // Text color
-  ctx.font = '32px Arial'; // Font size and family
+  ctx.font = '25px Arial'; // Font size and family
   ctx.textAlign = 'center'; // Center the text horizontally
   ctx.textBaseline = 'middle'; // Center the text vertically
 
   // Draw the text onto the canvas
-  ctx.fillText(countdownText, canvas.width / 2, canvas.height / 2);
+  ctx.fillText(countdownText, canvas.width / 2, canvas.height / 4 * 3);
 
   // Convert the canvas to a Buffer
   const buffer = canvas.toBuffer('image/png');
