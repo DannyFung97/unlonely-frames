@@ -99,7 +99,7 @@ app.get('/', (req, res) => {
 
     <meta property="fc:frame:button:1" content="refresh timer" />
     <meta property="fc:frame:button:1:action" content="post_redirect" />
-    <meta property="fc:frame:post_url" content="${req.protocol}://${req.get('host')}/" />
+    <meta property="fc:frame:post_url" content="${imageUrl}" />
 
     <meta property="fc:frame:button:2" content="watch now" />
     <meta property="fc:frame:button:2:action" content="link" />
